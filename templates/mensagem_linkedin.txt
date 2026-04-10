@@ -1,0 +1,12 @@
+Olá! Tudo bem?
+
+Vi sua publicação sobre a {{ cargo }} e gostaria de manifestar meu interesse. Tenho experiência com Python, SQL e Power BI, além de projetos práticos que demonstram essas habilidades na aplicação de análise e tratamento de dados. Fico à disposição para compartilhar mais detalhes, e desde já agradeço sua atenção. Abaixo o link de alguns projetos.
+
+
+https://www.linkedin.com/pulse/an%25C3%25A1lise-pr%25C3%25A1tica-da-dre-com-foco-em-dados-tecnologia-e-nunes-correa-udwkf/?trackingId=mlJH1RJwTg2moJbgUGPVJA%3D%3D
+
+https://www.linkedin.com/pulse/dre-anal%25C3%25ADtica-da-magazine-luiza-engenharia-de-dados-e-nunes-correa-nga7f/?trackingId=mlJH1RJwTg2moJbgUGPVJA%3D%3D
+
+https://www.linkedin.com/pulse/etl-com-apache-airflow-python-e-postgresql-victor-hugo-nunes-correa-zpj7f/?trackingId=mlJH1RJwTg2moJbgUGPVJA%3D%3D
+
+https://victor-hugo-correa.vercel.app/

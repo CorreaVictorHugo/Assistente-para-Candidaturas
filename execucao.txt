@@ -1,0 +1,3 @@
+rodar sem a variável de ambiete do streamlit
+python -m streamlit run app.py
+
