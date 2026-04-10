@@ -107,65 +107,44 @@ assistente_candidaturas_ia/
 └── templates/
 
 ⚙️ Papel dos módulos
+
 app.py
 
 Interface principal da aplicação (Streamlit)
 
-parser_vaga.py
+- parser_vaga.py
 
 Processa e organiza os dados da vaga
 
-analisador_fit.py
+- analisador_fit.py
 
 Calcula aderência e gera score
 
-gerador_curriculo.py
+- gerador_curriculo.py
 
 Gera currículo sem IA
 
-gerador_mensagem.py
+- gerador_mensagem.py
 
 Gera mensagens sem IA
 
-ia_generator.py
+- ia_generator.py
 
 Integração com IA (Gemini)
 
-leitor_vaga.py
+- leitor_vaga.py
 
 Extrai conteúdo de vagas a partir de links
 
-buscador_vagas.py
+- buscador_vagas.py
 
 Busca vagas (versão inicial simulada)
 
-tracker.py
+- tracker.py
 
 Gerencia o banco SQLite
 
-exportador.py
+- exportador.py
 
 Preparado para exportações futuras
 
-▶️ Como executar o projeto
-1. Clonar o repositório
-git clone <url-do-repositorio>
-2. Entrar na pasta
-cd assistente_candidaturas_ia
-3. Instalar dependências
-pip install -r requirements.txt
-4. Executar o app
-python -m streamlit run app.py
-
-🧪 Como usar a aplicação
-Buscar vagas (opcional)
-Selecionar uma vaga ou preencher manualmente
-Inserir ou carregar a descrição da vaga
-Escolher se deseja usar IA
-Clicar em "Analisar vaga"
-Visualizar:
-score
-análise
-currículo
-mensagem
-A candidatura será salva automaticamente no histórico
