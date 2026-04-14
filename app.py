@@ -1,12 +1,8 @@
-import streamlit as st # Biblioteca para criar a interface web
-import pandas as pd # Biblioteca para manipulação de dados
-import os # Biblioteca para operações de sistema
-from datetime import datetime # Biblioteca para manipulação de datas
-
-
+import streamlit as st
+import pandas as pd
+from modules.leitor_vaga import ler_vaga_do_link
 from modules.buscador_vagas import buscar_vagas
 from modules.ia_generator import gerar_conteudo_completo_com_ia
-from modules.leitor_vaga import ler_vaga_por_link
 from modules.parser_vaga import organizar_vaga
 from modules.analisador_fit import analisar_aderencia
 from modules.gerador_curriculo import gerar_curriculo_adaptado
@@ -63,11 +59,38 @@ def exibir_lista_titulo_itens(titulo, itens, mensagem_vazia):
     Exibe uma lista simples com título.
     """
     st.subheader(titulo)
+
     if itens:
         for item in itens:
             st.write(f"- {item}")
     else:
         st.write(mensagem_vazia)
+
+
+def inicializar_session_state():
+    """
+    Inicializa as variáveis do session_state.
+    """
+    if "empresa_input" not in st.session_state:
+        st.session_state["empresa_input"] = ""
+
+    if "cargo_input" not in st.session_state:
+        st.session_state["cargo_input"] = ""
+
+    if "link_input" not in st.session_state:
+        st.session_state["link_input"] = ""
+
+    if "descricao_vaga" not in st.session_state:
+        st.session_state["descricao_vaga"] = ""
+
+    if "resultados_busca" not in st.session_state:
+        st.session_state["resultados_busca"] = []
+
+    if "busca_palavra_chave" not in st.session_state:
+        st.session_state["busca_palavra_chave"] = ""
+
+    if "busca_localizacao" not in st.session_state:
+        st.session_state["busca_localizacao"] = ""
 
 
 def main():
@@ -76,29 +99,23 @@ def main():
         layout="wide"
     )
 
+    st.markdown(
+        """
+        <style>
+            .block-container {
+                max-width: 1500px;
+                padding-top: 1.8rem;
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+                padding-bottom: 2rem;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
     criar_tabela_candidaturas()
-
-    # Session state
-    if "empresa_input" not in st.session_state:
-        st.session_state.empresa_input = ""
-
-    if "cargo_input" not in st.session_state:
-        st.session_state.cargo_input = ""
-
-    if "link_input" not in st.session_state:
-        st.session_state.link_input = ""
-
-    if "descricao_vaga" not in st.session_state:
-        st.session_state.descricao_vaga = ""
-
-    if "resultados_busca" not in st.session_state:
-        st.session_state.resultados_busca = []
-
-    if "busca_palavra_chave" not in st.session_state:
-        st.session_state.busca_palavra_chave = ""
-
-    if "busca_localizacao" not in st.session_state:
-        st.session_state.busca_localizacao = ""
+    inicializar_session_state()
 
     st.title("Assistente de Candidaturas com IA")
 
@@ -118,37 +135,42 @@ def main():
     # =========================================================
     st.subheader("Buscar vagas")
 
-    palavra_chave_busca = st.text_input(
-        "Palavra-chave da busca",
-        key="busca_palavra_chave"
-    )
+    col_busca_input_1, col_busca_input_2 = st.columns(2)
 
-    localizacao_busca = st.text_input(
-        "Localização da busca",
-        key="busca_localizacao"
-    )
+    with col_busca_input_1:
+        palavra_chave_busca = st.text_input(
+            "Palavra-chave da busca",
+            key="busca_palavra_chave"
+        )
+
+    with col_busca_input_2:
+        localizacao_busca = st.text_input(
+            "Localização da busca",
+            key="busca_localizacao"
+        )
 
     col_busca_1, col_busca_2 = st.columns(2)
 
     with col_busca_1:
-        if st.button("Buscar vagas", use_container_width=True):
+        if st.button("Buscar vagas", use_container_width=True, key="btn_buscar_vagas"):
             resultados = buscar_vagas(
                 palavra_chave=palavra_chave_busca,
                 localizacao=localizacao_busca
             )
-            st.session_state.resultados_busca = resultados
-
-    with col_busca_2:
-        if st.button("Limpar busca", use_container_width=True):
-            st.session_state.resultados_busca = []
-            st.session_state.busca_palavra_chave = ""
-            st.session_state.busca_localizacao = ""
+            st.session_state["resultados_busca"] = resultados
             st.rerun()
 
-    if st.session_state.resultados_busca:
+    with col_busca_2:
+        if st.button("Limpar busca", use_container_width=True, key="btn_limpar_busca"):
+            st.session_state["resultados_busca"] = []
+            st.session_state["busca_palavra_chave"] = ""
+            st.session_state["busca_localizacao"] = ""
+            st.rerun()
+
+    if st.session_state["resultados_busca"]:
         st.write("Resultados encontrados:")
 
-        for i, vaga_encontrada in enumerate(st.session_state.resultados_busca):
+        for i, vaga_encontrada in enumerate(st.session_state["resultados_busca"]):
             with st.container():
                 st.markdown(f"**Cargo:** {vaga_encontrada['cargo']}")
                 st.markdown(f"**Empresa:** {vaga_encontrada['empresa']}")
@@ -158,9 +180,9 @@ def main():
                 st.markdown(f"**Link:** [Abrir vaga]({vaga_encontrada['link']})")
 
                 if st.button("Selecionar vaga", key=f"selecionar_vaga_{i}"):
-                    st.session_state.empresa_input = vaga_encontrada["empresa"]
-                    st.session_state.cargo_input = vaga_encontrada["cargo"]
-                    st.session_state.link_input = vaga_encontrada["link"]
+                    st.session_state["empresa_input"] = vaga_encontrada["empresa"]
+                    st.session_state["cargo_input"] = vaga_encontrada["cargo"]
+                    st.session_state["link_input"] = vaga_encontrada["link"]
                     st.success("Vaga selecionada e campos preenchidos.")
                     st.rerun()
 
@@ -171,48 +193,121 @@ def main():
     # =========================================================
     st.subheader("Preencha os dados da vaga")
 
-    empresa = st.text_input("Empresa", key="empresa_input")
-    cargo = st.text_input("Cargo", key="cargo_input")
-    link = st.text_input("Link da vaga", key="link_input")
+    # Container dos campos para aparecer antes visualmente
+    container_campos_vaga = st.container()
 
-    if st.button("Limpar dados da vaga", use_container_width=True):
-        st.session_state.empresa_input = ""
-        st.session_state.cargo_input = ""
-        st.session_state.link_input = ""
-        st.session_state.descricao_vaga = ""
-        st.rerun()
+    # Botões ficam no código antes da renderização real dos campos
+    # para evitar erro de session_state, mas visualmente os campos
+    # continuam aparecendo primeiro.
+    col_btn_1, col_btn_2, col_btn_3, col_btn_4 = st.columns(4)
 
-    usar_leitura_por_link = st.checkbox("Ler descrição da vaga automaticamente pelo link")
+    with col_btn_1:
+        if st.button(
+            "Preencher dados pelo link",
+            use_container_width=True,
+            key="btn_preencher_link"
+        ):
+            link_atual = st.session_state.get("link_input", "").strip()
 
-    if usar_leitura_por_link:
-        col1, col2 = st.columns([1, 1])
+            if not link_atual:
+                st.warning("Informe um link antes de tentar ler a vaga.")
+            else:
+                try:
+                    dados_vaga = ler_vaga_do_link(link_atual)
 
-        with col1:
-            if st.button("Buscar descrição pelo link", use_container_width=True):
-                if not link.strip():
-                    st.warning("Informe um link antes de tentar ler a vaga.")
-                else:
-                    try:
-                        texto_extraido = ler_vaga_por_link(link)
-                        st.session_state.descricao_vaga = texto_extraido
-                        st.success("Descrição da vaga carregada a partir do link.")
-                    except Exception as erro:
-                        st.error(f"Não foi possível ler a vaga pelo link. Erro: {erro}")
+                    if dados_vaga.get("empresa"):
+                        st.session_state["empresa_input"] = dados_vaga["empresa"]
 
-        with col2:
-            if st.button("Limpar descrição", use_container_width=True):
-                st.session_state.descricao_vaga = ""
-                st.rerun()
+                    if dados_vaga.get("cargo"):
+                        st.session_state["cargo_input"] = dados_vaga["cargo"]
 
-    descricao = st.text_area(
-        "Descrição da vaga",
-        height=250,
-        key="descricao_vaga"
-    )
+                    if dados_vaga.get("descricao_original"):
+                        st.session_state["descricao_vaga"] = dados_vaga["descricao_original"]
+                    elif dados_vaga.get("descricao"):
+                        st.session_state["descricao_vaga"] = dados_vaga["descricao"]
 
-    usar_ia = st.checkbox("Usar IA para gerar currículo e mensagem")
+                    if dados_vaga.get("erro"):
+                        st.warning(
+                            "A vaga foi lida parcialmente. Revise empresa, cargo e descrição antes de continuar."
+                        )
+                    else:
+                        st.success("Campos preenchidos automaticamente pelo link.")
 
-    if st.button("Analisar vaga", use_container_width=True):
+                    st.rerun()
+
+                except Exception as erro:
+                    st.error(f"Não foi possível ler a vaga pelo link. Erro: {erro}")
+
+    with col_btn_2:
+        if st.button(
+            "Buscar só descrição",
+            use_container_width=True,
+            key="btn_buscar_descricao"
+        ):
+            link_atual = st.session_state.get("link_input", "").strip()
+
+            if not link_atual:
+                st.warning("Informe um link antes de tentar ler a vaga.")
+            else:
+                try:
+                    dados_vaga = ler_vaga_do_link(link_atual)
+
+                    if dados_vaga.get("descricao_original"):
+                        st.session_state["descricao_vaga"] = dados_vaga["descricao_original"]
+                    elif dados_vaga.get("descricao"):
+                        st.session_state["descricao_vaga"] = dados_vaga["descricao"]
+
+                    if dados_vaga.get("erro"):
+                        st.warning("Não foi possível extrair tudo, mas tentei carregar a descrição.")
+                    else:
+                        st.success("Descrição carregada a partir do link.")
+
+                    st.rerun()
+
+                except Exception as erro:
+                    st.error(f"Não foi possível ler a vaga pelo link. Erro: {erro}")
+
+    with col_btn_3:
+        if st.button(
+            "Limpar descrição",
+            use_container_width=True,
+            key="btn_limpar_descricao"
+        ):
+            st.session_state["descricao_vaga"] = ""
+            st.rerun()
+
+    with col_btn_4:
+        if st.button(
+            "Limpar dados da vaga",
+            use_container_width=True,
+            key="btn_limpar_dados_vaga"
+        ):
+            st.session_state["empresa_input"] = ""
+            st.session_state["cargo_input"] = ""
+            st.session_state["link_input"] = ""
+            st.session_state["descricao_vaga"] = ""
+            st.rerun()
+
+    with container_campos_vaga:
+        empresa = st.text_input("Empresa", key="empresa_input")
+        cargo = st.text_input("Cargo", key="cargo_input")
+        link = st.text_input("Link da vaga", key="link_input")
+        descricao = st.text_area(
+            "Descrição da vaga",
+            height=350,
+            key="descricao_vaga"
+        )
+
+    st.markdown("---")
+
+    usar_ia = st.checkbox("Usar IA para gerar currículo e mensagem", value=True)
+
+    if st.button("Analisar vaga", use_container_width=True, key="btn_analisar_vaga"):
+        empresa = st.session_state.get("empresa_input", "").strip()
+        cargo = st.session_state.get("cargo_input", "").strip()
+        link = st.session_state.get("link_input", "").strip()
+        descricao = st.session_state.get("descricao_vaga", "").strip()
+
         if not empresa or not cargo or not descricao:
             st.warning("Preencha empresa, cargo e descrição da vaga.")
         else:
@@ -261,12 +356,14 @@ def main():
             if analise["recomendacoes"]:
                 for recomendacao in analise["recomendacoes"]:
                     st.write(f"- {recomendacao}")
+            else:
+                st.write("Nenhuma recomendação adicional no momento.")
 
             with st.expander("Ver detalhes técnicos da vaga analisada"):
-                st.write("Habilidades técnicas:", vaga["habilidades_tecnicas"])
-                st.write("Habilidades comportamentais:", vaga["habilidades_comportamentais"])
-                st.write("Áreas relacionadas:", vaga["areas_interesse"])
-                st.write("Palavras-chave:", vaga["palavras_chave"])
+                st.write("Habilidades técnicas:", vaga.get("habilidades_tecnicas", []))
+                st.write("Habilidades comportamentais:", vaga.get("habilidades_comportamentais", []))
+                st.write("Áreas relacionadas:", vaga.get("areas_interesse", []))
+                st.write("Palavras-chave:", vaga.get("palavras_chave", []))
 
             st.divider()
 
@@ -277,13 +374,28 @@ def main():
             ])
 
             with aba1:
-                st.text_area("Currículo gerado", curriculo, height=450)
+                st.text_area(
+                    "Currículo gerado",
+                    curriculo,
+                    height=450,
+                    key="resultado_curriculo"
+                )
 
             with aba2:
-                st.text_area("Mensagem LinkedIn / e-mail", mensagens["mensagem_linkedin"], height=250)
+                st.text_area(
+                    "Mensagem LinkedIn / e-mail",
+                    mensagens["mensagem_linkedin"],
+                    height=250,
+                    key="resultado_mensagem"
+                )
 
             with aba3:
-                st.text_area("Texto curto", mensagens["texto_curto"], height=150)
+                st.text_area(
+                    "Texto curto",
+                    mensagens["texto_curto"],
+                    height=150,
+                    key="resultado_texto_curto"
+                )
 
     # =========================================================
     # HISTÓRICO
@@ -320,6 +432,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-print(os.getenv("GEMINI_API_KEY"))
