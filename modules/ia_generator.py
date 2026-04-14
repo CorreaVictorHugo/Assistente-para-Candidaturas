@@ -1,7 +1,12 @@
+import os
+from dotenv import load_dotenv
 import google.generativeai as genai
 
-# Configure sua API KEY aqui (troque depois por variável de ambiente)
-genai.configure(api_key="AIzaSyAD8g-7HubkNaBQ38FF2cWw4i1Xh7Y66U8") 
+# Carrega o arquivo .env
+load_dotenv()
+
+# Configura a API
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 
 def gerar_texto(prompt):

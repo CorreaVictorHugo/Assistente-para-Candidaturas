@@ -9,13 +9,14 @@
 :: Assistente de Candidaturas com IA
 :: ===============================
 
-echo Iniciando o app...
+@echo off 
+:: Limpa o terminal
 
-:: Vai para a pasta do projeto
-cd /d %~dp0
+cd /d C:\Carrer_ops
+:: Vai para a pasta do projeto automaticamente
 
-:: Executa o Streamlit
 python -m streamlit run app.py
+:: Roda o app Streamlit
 
-:: Mantém a janela aberta
 pause
+:: Mantém a janela aberta se der erro, para você ver o que aconteceu.
