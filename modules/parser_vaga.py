@@ -23,14 +23,53 @@ HABILIDADES_TECNICAS_MAPA = [
     "python",
     "sql",
     "power bi",
+    "power query",
+    "dax",
     "excel",
     "automação",
     "automacao",
     "etl",
+    "elt",
+    "airflow",
+    "apache airflow",
+    "postgresql",
+    "postgres",
+    "mysql",
+    "sql server",
     "dashboard",
+    "dashboards",
+    "relatório",
+    "relatorios",
+    "relatórios",
+    "kpi",
+    "kpis",
+    "indicadores",
+    "visualização de dados",
+    "visualizacao de dados",
+    "data visualization",
     "dados",
     "análise de dados",
     "analise de dados",
+    "analytics",
+    "business intelligence",
+    "bi",
+    "engenharia de dados",
+    "pipeline",
+    "pipelines",
+    "pipeline de dados",
+    "pipelines de dados",
+    "tratamento de dados",
+    "modelagem de dados",
+    "data warehouse",
+    "databricks",
+    "spark",
+    "spark sql",
+    "pyspark",
+    "delta lake",
+    "azure databricks",
+    "azure data lake",
+    "git",
+    "github",
     "suporte técnico",
     "suporte tecnico",
     "monitoramento",
@@ -80,8 +119,44 @@ AREAS_INTERESSE_MAPA = [
     "operacoes",
     "tecnologia",
     "analytics",
-    "bi"
+    "bi",
+    "business intelligence",
+    "engenharia de dados",
+    "inteligência de negócios",
+    "inteligencia de negocios"
 ]
+
+
+TIPOS_VAGA_MAPA = {
+    "Analista de Dados": [
+        "analista de dados", "data analyst", "análise de dados", "analise de dados",
+        "sql", "power bi", "dashboard", "indicadores", "kpi"
+    ],
+    "BI": [
+        "bi", "business intelligence", "power bi", "dax", "power query",
+        "dashboard", "relatórios", "relatorios", "indicadores"
+    ],
+    "Engenharia de Dados": [
+        "engenharia de dados", "data engineer", "etl", "elt", "airflow",
+        "pipeline", "pipelines", "postgresql", "spark", "databricks"
+    ],
+    "Automação e Processos": [
+        "automação", "automacao", "processos", "python", "rotinas",
+        "monitoramento", "control-m"
+    ],
+    "Suporte com Dados": [
+        "suporte", "suporte técnico", "suporte tecnico", "monitoramento",
+        "operações", "operacoes", "dados", "sql"
+    ]
+}
+
+
+SENIORIDADE_MAPA = {
+    "Estágio": ["estágio", "estagio", "intern", "trainee"],
+    "Júnior": ["júnior", "junior", "jr", "assistente", "auxiliar"],
+    "Pleno": ["pleno", "mid-level", "analista pleno"],
+    "Sênior": ["sênior", "senior", "sr", "especialista", "lead"]
+}
 
 
 def limpar_texto(texto):
@@ -139,6 +214,23 @@ def identificar_termos(texto, mapa_termos):
     return sorted(list(set(encontrados)))
 
 
+def classificar_por_mapa(texto, mapa):
+    """
+    Classifica o texto usando contagem simples de termos por categoria.
+    """
+    pontuacoes = {}
+
+    for categoria, termos in mapa.items():
+        pontuacoes[categoria] = sum(1 for termo in termos if termo in texto)
+
+    categoria_mais_provavel = max(pontuacoes, key=pontuacoes.get)
+
+    if pontuacoes[categoria_mais_provavel] == 0:
+        return "Não classificada"
+
+    return categoria_mais_provavel
+
+
 def organizar_vaga(empresa, cargo, link, descricao):
     """
     Organiza e enriquece os dados da vaga.
@@ -163,7 +255,9 @@ def organizar_vaga(empresa, cargo, link, descricao):
         "palavras_chave": extrair_palavras_chave(descricao_limpa),
         "habilidades_tecnicas": identificar_termos(descricao_limpa, HABILIDADES_TECNICAS_MAPA),
         "habilidades_comportamentais": identificar_termos(descricao_limpa, HABILIDADES_COMPORTAMENTAIS_MAPA),
-        "areas_interesse": identificar_termos(descricao_limpa, AREAS_INTERESSE_MAPA)
+        "areas_interesse": identificar_termos(descricao_limpa, AREAS_INTERESSE_MAPA),
+        "tipo_vaga": classificar_por_mapa(descricao_limpa + " " + cargo.lower(), TIPOS_VAGA_MAPA),
+        "senioridade": classificar_por_mapa(descricao_limpa + " " + cargo.lower(), SENIORIDADE_MAPA)
     }
 
     return vaga

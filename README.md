@@ -1,150 +1,239 @@
-# 🚀 Assistente de Candidaturas com IA
+# Assistente de Candidaturas com IA
 
-Aplicação em Python desenvolvida para otimizar e automatizar o processo de candidatura a vagas de emprego.
+Aplicação local desenvolvida em Python para apoiar candidaturas mais estratégicas para vagas na área de dados.
 
-O sistema permite analisar vagas, gerar currículo personalizado, criar mensagens para recrutadores e organizar candidaturas de forma estruturada.
+O app lê ou recebe a descrição de uma vaga, compara os requisitos com um perfil profissional base, calcula aderência, identifica lacunas e gera materiais personalizados para candidatura, como currículo adaptado, mensagem para recrutador, apresentação curta e carta de apresentação.
 
----
+Além de ser uma ferramenta de uso pessoal, este projeto demonstra competências importantes para trabalhos freelancer e oportunidades profissionais em dados, automação e soluções com IA.
 
-# 🎯 Objetivo
+## Objetivo do Projeto
 
-Facilitar e acelerar o processo de candidatura, tornando-o mais estratégico, organizado e eficiente.
+O objetivo é reduzir o trabalho manual e aumentar a precisão no processo de candidatura.
 
-A aplicação foi projetada para rodar localmente e fornecer suporte completo ao usuário durante a candidatura.
+Em vez de usar o mesmo currículo e a mesma mensagem para todas as vagas, o app ajuda a responder:
 
----
+- A vaga combina com o perfil atual?
+- Quais requisitos aparecem no perfil?
+- Quais lacunas precisam ser tratadas com honestidade?
+- Quais projetos devem ser destacados como evidência?
+- Como adaptar a candidatura sem inventar experiência?
 
-# 🧠 Funcionalidades
+## Funcionalidades
 
-## 📥 Entrada de dados
-- preenchimento de empresa, cargo e link
-- inserção manual da descrição da vaga
-- leitura automática da vaga por link
+- Busca de vagas por palavra-chave e localização.
+- Sugestões locais focadas em dados, BI, automação, engenharia de dados e Rio de Janeiro/RJ.
+- Atalhos para buscas externas em sites de vagas.
+- Integração com API pública da Remotive para vagas remotas.
+- Leitura de vagas por link.
+- Extração de empresa, cargo e descrição quando possível.
+- Classificação provável da vaga por área.
+- Identificação de senioridade provável.
+- Cálculo de score de aderência.
+- Identificação de pontos fortes e lacunas.
+- Seleção de projetos relevantes do portfólio como evidência.
+- Geração de currículo adaptado.
+- Geração de mensagem para recrutador.
+- Geração de apresentação profissional curta.
+- Geração de carta de apresentação.
+- Histórico local de candidaturas em SQLite.
+- Atalho de Área de Trabalho para abrir o app como uma aplicação local.
 
-## 🔍 Busca de vagas
-- busca por palavra-chave
-- filtro por localização
-- seleção de vagas diretamente na interface
-
-## 📊 Análise de aderência
-- comparação com perfil-base
-- score de compatibilidade
-- identificação de:
-  - pontos fortes
-  - lacunas
-  - recomendações
-
-## 🤖 Uso de IA (opcional)
-- geração de currículo com IA (Gemini)
-- geração de mensagem para recrutador
-- geração de apresentação curta
-- otimização de tokens com chamada única
-
-## 📄 Geração de conteúdo
-- currículo adaptado (ATS-friendly)
-- mensagem para recrutador (LinkedIn/e-mail)
-- resumo profissional
-
-## 🧹 Tratamento de dados
-- limpeza do texto extraído de páginas web
-- remoção de ruído (cookies, menus, etc.)
-
-## 🗂️ Histórico de candidaturas
-- armazenamento em SQLite
-- listagem de candidaturas
-- exclusão diretamente pela interface
-
-## ⚡ Usabilidade
-- botões de limpeza:
-  - limpar busca
-  - limpar formulário
-  - limpar descrição
-
----
-
-# 🛠️ Tecnologias utilizadas
+## Tecnologias Utilizadas
 
 - Python
 - Streamlit
 - SQLite
-- pandas
-- requests
+- Pandas
+- Requests
 - BeautifulSoup
-- trafilatura
-- Google Gemini API (IA)
+- Trafilatura
+- Google Gemini API
+- Python-dotenv
 
----
+## Competências Demonstradas
 
-# 📁 Estrutura do projeto
+Este projeto mostra domínio prático em:
+
+- Desenvolvimento de aplicações com Python.
+- Criação de interfaces com Streamlit.
+- Automação de fluxos manuais.
+- Integração com APIs externas.
+- Processamento e limpeza de texto.
+- Extração de conteúdo de páginas web.
+- Uso de IA generativa em um fluxo real.
+- Organização de dados em SQLite.
+- Construção de lógica de score e matching.
+- Criação de uma ferramenta orientada a produtividade.
+
+## Valor Profissional
+
+Este app pode ser entendido como um exemplo de solução para automação de processos com IA.
+
+Em um contexto freelancer ou corporativo, a mesma lógica pode ser adaptada para:
+
+- triagem de currículos;
+- análise de compatibilidade entre candidatos e vagas;
+- automação de mensagens comerciais;
+- geração de propostas personalizadas;
+- classificação de oportunidades;
+- priorização de leads;
+- análise de textos longos com regras de negócio;
+- criação de assistentes internos para equipes.
+
+O projeto demonstra não apenas conhecimento técnico, mas também capacidade de transformar uma dor real em uma ferramenta funcional.
+
+## Projetos Usados como Evidência
+
+O app utiliza projetos cadastrados no perfil base para fortalecer a candidatura.
+
+Exemplos de projetos presentes na base:
+
+- Análise prática da DRE com foco em dados.
+- DRE analítica da Magazine Luiza.
+- DRE Magazine Luiza 3.0 com Azure e Databricks.
+- ETL com Apache Airflow, Python e PostgreSQL.
+- Portfólio profissional.
+
+Esses projetos ajudam o app a sugerir evidências mais fortes para vagas que pedem SQL, Power BI, ETL, Airflow, Azure, Databricks, PySpark, Spark SQL, Delta Lake, dashboards, indicadores e análise de dados.
+
+## Como Funciona
+
+1. O usuário informa uma vaga manualmente, por link ou pela busca integrada.
+2. O app organiza os dados da vaga.
+3. O parser identifica habilidades técnicas, comportamentais, área provável e senioridade.
+4. O analisador compara a vaga com o perfil base.
+5. O sistema calcula o score de aderência.
+6. O app seleciona projetos relevantes como evidência.
+7. A IA ou os geradores internos criam os materiais da candidatura.
+8. A candidatura é registrada no histórico local.
+
+## Como Usar
+
+Abra o app pelo atalho da Área de Trabalho:
+
+```text
+Assistente de Candidaturas
+```
+
+Ou execute:
 
 ```bash
-assistente_candidaturas_ia/
-│
-├── app.py
-├── requirements.txt
-├── README.md
-│
-├── data/
-│   ├── curriculo_base.md
-│   └── vagas.db
-│
-├── modules/
-│   ├── parser_vaga.py
-│   ├── analisador_fit.py
-│   ├── gerador_curriculo.py
-│   ├── gerador_mensagem.py
-│   ├── ia_generator.py
-│   ├── leitor_vaga.py
-│   ├── buscador_vagas.py
-│   ├── tracker.py
-│   └── exportador.py
-│
-├── outputs/
-│   ├── curriculos/
-│   ├── mensagens/
-│   └── relatorios/
-│
-└── templates/
+python -m streamlit run app.py
+```
 
-⚙️ Papel dos módulos
+O app roda localmente em:
 
+```text
+http://localhost:8501
+```
+
+## Fluxo de Uso
+
+1. Busque uma vaga ou preencha os dados manualmente.
+2. Informe empresa, cargo, link e descrição da vaga.
+3. Escolha se deseja usar IA para gerar os textos.
+4. Clique em `Analisar vaga`.
+5. Revise score, pontos fortes, lacunas e projetos sugeridos.
+6. Use o currículo, mensagem, apresentação e carta gerados.
+7. Consulte o histórico para acompanhar candidaturas anteriores.
+
+## Interpretação do Score
+
+- `80% ou mais`: alta compatibilidade.
+- `60% a 79%`: compatibilidade moderada.
+- `menos de 60%`: compatibilidade baixa.
+
+O score é um apoio à decisão. Ele deve ser analisado junto com as lacunas, os projetos sugeridos e o objetivo profissional.
+
+## Estrutura do Projeto
+
+```text
 app.py
+```
 
-Interface principal da aplicação (Streamlit)
+Interface principal em Streamlit.
 
-- parser_vaga.py
+```text
+data/curriculo_base.md
+```
 
-Processa e organiza os dados da vaga
+Perfil profissional base, competências e projetos usados como evidência.
 
-- analisador_fit.py
+```text
+modules/buscador_vagas.py
+```
 
-Calcula aderência e gera score
+Busca de vagas, sugestões locais, API Remotive e atalhos externos.
 
-- gerador_curriculo.py
+```text
+modules/parser_vaga.py
+```
 
-Gera currículo sem IA
+Extração de habilidades, palavras-chave, tipo de vaga e senioridade.
 
-- gerador_mensagem.py
+```text
+modules/analisador_fit.py
+```
 
-Gera mensagens sem IA
+Cálculo de aderência, lacunas, pontos fortes e projetos relevantes.
 
-- ia_generator.py
+```text
+modules/ia_generator.py
+```
 
-Integração com IA (Gemini)
+Geração de conteúdos com Gemini.
 
-- leitor_vaga.py
+```text
+modules/gerador_curriculo.py
+```
 
-Extrai conteúdo de vagas a partir de links
+Geração de currículo adaptado sem IA.
 
-- buscador_vagas.py
+```text
+modules/gerador_mensagem.py
+```
 
-Busca vagas (versão inicial simulada)
+Geração de mensagem, apresentação curta e carta sem IA.
 
-- tracker.py
+```text
+modules/leitor_vaga.py
+```
 
-Gerencia o banco SQLite
+Leitura e extração de conteúdo a partir de links.
 
-- exportador.py
+```text
+modules/tracker.py
+```
 
-Preparado para exportações futuras
+Histórico local de candidaturas com SQLite.
 
+## Diferenciais
+
+- Foco em transição para dados.
+- Uso de projetos reais como evidência.
+- Geração de materiais personalizados sem inventar experiência.
+- Interface simples para uso diário.
+- Possibilidade de funcionar como base para soluções freelancer.
+- Combinação de automação, IA generativa e análise de texto.
+
+## Limitações Atuais
+
+- A busca real por vagas depende de fontes externas.
+- Sites como LinkedIn e Gupy podem limitar automações.
+- A leitura automática por link pode variar conforme a estrutura da página.
+- Os textos gerados devem ser revisados antes do envio.
+
+## Próximas Melhorias
+
+- Exportar currículo e carta em `.docx`.
+- Criar status de candidatura, como aplicada, mensagem enviada, entrevista e follow-up.
+- Adicionar lembretes de follow-up.
+- Melhorar integração com fontes reais de vagas.
+- Criar uma área para cadastrar novos projetos pela interface.
+- Criar filtros mais avançados por localidade, senioridade e modalidade.
+
+## Observação
+
+Este projeto foi desenvolvido para uso local e como demonstração prática de automação aplicada à carreira, dados e IA.
+
+Ele representa uma solução real para uma necessidade concreta: tornar candidaturas mais objetivas, consistentes e alinhadas com evidências profissionais.

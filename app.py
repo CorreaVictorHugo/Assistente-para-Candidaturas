@@ -177,12 +177,17 @@ def main():
                 st.markdown(f"**Localização:** {vaga_encontrada['localizacao']}")
                 st.markdown(f"**Fonte:** {vaga_encontrada['fonte']}")
                 st.markdown(f"**Resumo:** {vaga_encontrada['resumo']}")
-                st.markdown(f"**Link:** [Abrir vaga]({vaga_encontrada['link']})")
+                texto_link = "Abrir busca" if "simulada" in vaga_encontrada["fonte"].lower() else "Abrir vaga"
+                st.markdown(f"**Link:** [{texto_link}]({vaga_encontrada['link']})")
 
                 if st.button("Selecionar vaga", key=f"selecionar_vaga_{i}"):
                     st.session_state["empresa_input"] = vaga_encontrada["empresa"]
                     st.session_state["cargo_input"] = vaga_encontrada["cargo"]
                     st.session_state["link_input"] = vaga_encontrada["link"]
+
+                    if vaga_encontrada.get("descricao"):
+                        st.session_state["descricao_vaga"] = vaga_encontrada["descricao"]
+
                     st.success("Vaga selecionada e campos preenchidos.")
                     st.rerun()
 
@@ -322,7 +327,8 @@ def main():
                 curriculo = conteudo_ia["curriculo"]
                 mensagens = {
                     "mensagem_linkedin": conteudo_ia["mensagem_linkedin"],
-                    "texto_curto": conteudo_ia["texto_curto"]
+                    "texto_curto": conteudo_ia["texto_curto"],
+                    "carta_apresentacao": conteudo_ia.get("carta_apresentacao", "")
                 }
             else:
                 curriculo = gerar_curriculo_adaptado(vaga, perfil_base, analise)
@@ -335,6 +341,14 @@ def main():
 
             st.subheader("Resultado da análise")
             mostrar_score_em_destaque(analise["score"])
+
+            col_tipo, col_senioridade = st.columns(2)
+
+            with col_tipo:
+                st.metric("Tipo provável da vaga", analise.get("tipo_vaga", "Não classificada"))
+
+            with col_senioridade:
+                st.metric("Senioridade provável", analise.get("senioridade", "Não classificada"))
 
             col_pontos, col_lacunas = st.columns(2)
 
@@ -359,7 +373,21 @@ def main():
             else:
                 st.write("Nenhuma recomendação adicional no momento.")
 
+            projetos_relevantes = analise.get("projetos_relevantes", [])
+            if projetos_relevantes:
+                st.subheader("Projetos para destacar nesta candidatura")
+
+                for projeto in projetos_relevantes:
+                    termos = ", ".join(projeto.get("termos", []))
+                    st.markdown(f"**{projeto['titulo']}**")
+                    if termos:
+                        st.write(f"Conecta com: {termos}")
+                    if projeto.get("link"):
+                        st.markdown(f"[Abrir evidência]({projeto['link']})")
+
             with st.expander("Ver detalhes técnicos da vaga analisada"):
+                st.write("Tipo provável da vaga:", vaga.get("tipo_vaga", "Não classificada"))
+                st.write("Senioridade provável:", vaga.get("senioridade", "Não classificada"))
                 st.write("Habilidades técnicas:", vaga.get("habilidades_tecnicas", []))
                 st.write("Habilidades comportamentais:", vaga.get("habilidades_comportamentais", []))
                 st.write("Áreas relacionadas:", vaga.get("areas_interesse", []))
@@ -367,10 +395,11 @@ def main():
 
             st.divider()
 
-            aba1, aba2, aba3 = st.tabs([
+            aba1, aba2, aba3, aba4 = st.tabs([
                 "Currículo adaptado",
                 "Mensagem para recrutador",
-                "Apresentação curta"
+                "Apresentação curta",
+                "Carta de apresentação"
             ])
 
             with aba1:
@@ -395,6 +424,14 @@ def main():
                     mensagens["texto_curto"],
                     height=150,
                     key="resultado_texto_curto"
+                )
+
+            with aba4:
+                st.text_area(
+                    "Carta de apresentação",
+                    mensagens.get("carta_apresentacao", ""),
+                    height=300,
+                    key="resultado_carta_apresentacao"
                 )
 
     # =========================================================

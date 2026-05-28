@@ -64,16 +64,21 @@ Escreva uma mensagem curta e profissional para recrutador no LinkedIn ou e-mail.
 
 [APRESENTACAO]
 Escreva uma apresentação curta, objetiva e profissional.
+
+[CARTA]
+Escreva uma carta de apresentação curta, direta e alinhada à vaga, usando evidências reais do perfil quando houver.
 """
 
     resposta = gerar_texto(prompt)
 
     curriculo = extrair_bloco(resposta, "[CURRICULO]", "[MENSAGEM]")
     mensagem = extrair_bloco(resposta, "[MENSAGEM]", "[APRESENTACAO]")
-    apresentacao = extrair_bloco(resposta, "[APRESENTACAO]")
+    apresentacao = extrair_bloco(resposta, "[APRESENTACAO]", "[CARTA]")
+    carta = extrair_bloco(resposta, "[CARTA]")
 
     return {
         "curriculo": curriculo,
         "mensagem_linkedin": mensagem,
-        "texto_curto": apresentacao
+        "texto_curto": apresentacao,
+        "carta_apresentacao": carta
     }

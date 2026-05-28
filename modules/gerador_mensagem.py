@@ -32,6 +32,28 @@ def definir_tom_mensagem(score):
     return "baixa"
 
 
+def resumir_projeto_relevante(analise):
+    """
+    Retorna o projeto mais aderente para usar como evidência na mensagem.
+    """
+    projetos = analise.get("projetos_relevantes", [])
+
+    if not projetos:
+        return ""
+
+    projeto = projetos[0]
+    titulo = projeto.get("titulo", "")
+    link = projeto.get("link", "")
+
+    if titulo and link:
+        return f"Tenho também um projeto relacionado que pode contextualizar minha prática: {titulo} ({link})."
+
+    if titulo:
+        return f"Tenho também um projeto relacionado que pode contextualizar minha prática: {titulo}."
+
+    return ""
+
+
 def gerar_mensagem_linkedin(vaga, analise):
     """
     Gera uma mensagem para contato com recrutador no LinkedIn.
@@ -48,6 +70,9 @@ def gerar_mensagem_linkedin(vaga, analise):
     else:
         texto_destaques = "automação de processos, suporte operacional e capacidade analítica"
 
+    evidencia_projeto = resumir_projeto_relevante(analise)
+    complemento_evidencia = f"\n\n{evidencia_projeto}" if evidencia_projeto else ""
+
     if tom == "alta":
         mensagem = f"""
 Olá! Tudo bem?
@@ -55,6 +80,7 @@ Olá! Tudo bem?
 Vi a oportunidade para {cargo} na {empresa} e identifiquei uma boa aderência entre os requisitos da vaga e minha experiência profissional.
 
 Tenho atuação em rotinas operacionais, automação de processos e suporte a ambientes corporativos, com conhecimentos em {texto_destaques}. Acredito que meu perfil pode contribuir de forma positiva para a posição.
+{complemento_evidencia}
 
 Gostaria de me colocar à disposição para conversar e apresentar melhor minha experiência.
 
@@ -68,6 +94,7 @@ Olá! Tudo bem?
 Vi a vaga para {cargo} na {empresa} e gostei bastante da proposta da oportunidade.
 
 Minha experiência está relacionada a automação de processos, monitoramento operacional, suporte a rotinas corporativas e conhecimentos em {texto_destaques}. Acredito que meu perfil tem boa proximidade com a posição e que posso agregar valor com aprendizado rápido e dedicação.
+{complemento_evidencia}
 
 Fico à disposição para conversar, caso faça sentido para vocês.
 
@@ -81,6 +108,7 @@ Olá! Tudo bem?
 Vi a oportunidade para {cargo} na {empresa} e gostaria de demonstrar meu interesse na posição.
 
 Tenho experiência em automação de processos, suporte operacional e atividades corporativas, além de conhecimentos em {texto_destaques}. Mesmo que eu ainda esteja em desenvolvimento em alguns pontos da vaga, acredito que meu perfil analítico, minha adaptação e minha vontade de aprender podem ser diferenciais.
+{complemento_evidencia}
 
 Fico à disposição para me apresentar melhor.
 
@@ -111,6 +139,37 @@ def gerar_texto_apresentacao_curta(vaga, analise):
     return texto_curto
 
 
+def gerar_carta_apresentacao(vaga, analise):
+    """
+    Gera uma carta curta para candidatura.
+    """
+    empresa = vaga.get("empresa", "empresa")
+    cargo = vaga.get("cargo", "a vaga")
+    destaques = resumir_pontos_fortes(analise, limite=4)
+    projetos = analise.get("projetos_relevantes", [])
+
+    texto_destaques = ", ".join(destaques) if destaques else "automação de processos, análise de dados e suporte operacional"
+
+    carta = f"""
+Prezados(as),
+
+Tenho interesse na oportunidade de {cargo} na {empresa}. Minha trajetória combina atuação em rotinas corporativas, automação de processos, monitoramento operacional e evolução prática em dados, com conhecimentos em {texto_destaques}.
+
+Busco contribuir com uma visão analítica, organizada e orientada à melhoria de processos, conectando minha experiência operacional com soluções de dados que apoiem decisões e aumentem eficiência.
+""".strip()
+
+    if projetos:
+        projeto = projetos[0]
+        carta += (
+            f"\n\nComo evidência prática, destaco o projeto {projeto.get('titulo')}, "
+            f"relacionado a {', '.join(projeto.get('termos', [])[:4])}."
+        )
+
+    carta += "\n\nFico à disposição para conversar e apresentar mais detalhes sobre minha experiência.\n\nAtenciosamente,"
+
+    return carta
+
+
 def gerar_mensagem_recrutador(vaga, analise):
     """
     Retorna os dois formatos de mensagem:
@@ -119,5 +178,6 @@ def gerar_mensagem_recrutador(vaga, analise):
     """
     return {
         "mensagem_linkedin": gerar_mensagem_linkedin(vaga, analise),
-        "texto_curto": gerar_texto_apresentacao_curta(vaga, analise)
+        "texto_curto": gerar_texto_apresentacao_curta(vaga, analise),
+        "carta_apresentacao": gerar_carta_apresentacao(vaga, analise)
     }
